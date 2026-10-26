@@ -6,6 +6,7 @@ services:
     working_dir: /app
     volumes:
       - .:/app
+      - /app/vendor
     environment:
       DB_HOST: mysql
       DB_PORT: 3306
