@@ -1,0 +1,16 @@
+[
+    {
+        "id": "trx-002",
+        "external_id": "external-002",
+        "amount": "20.00",
+        "currency": "USD",
+        "occurred_at": "2026-10-01T13:00:00+03:00"
+    },
+    {
+        "id": "trx-003",
+        "external_id": "external-003",
+        "amount": "99.95",
+        "currency": "EUR",
+        "occurred_at": "2026-10-01T14:00:00+03:00"
+    }
+]

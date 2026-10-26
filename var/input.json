@@ -1,0 +1,7 @@
+{
+    "id": "trx-001",
+    "external_id": "external-001",
+    "amount": "125.50",
+    "currency": "EUR",
+    "occurred_at": "2026-10-01T12:00:00+03:00"
+}

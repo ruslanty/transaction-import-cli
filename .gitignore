@@ -1,0 +1,9 @@
+/vendor/
+/.php-cs-fixer.cache
+/.phpunit.result.cache
+/.idea/
+/var/log/
+/var/phpstan/
+/var/*.log
+.env
+.DS_Store

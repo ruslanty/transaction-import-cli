@@ -1,0 +1,7 @@
+{
+    "id": "trx-invalid-001",
+    "external_id": "external-invalid-001",
+    "amount": "not-a-number",
+    "currency": "EUR",
+    "occurred_at": "2026-10-01T15:00:00+03:00"
+}

@@ -1,0 +1,72 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use App\Application\ImportTransactions\ImportTransaction;
+use App\Application\ImportTransactions\ImportTransactions;
+use App\Application\ImportTransactions\SaveImportedTransaction;
+use App\Application\ImportTransactions\TransactionInputValidator;
+use App\Infrastructure\Configuration\DatabaseConfig;
+use App\Infrastructure\Input\JsonTransactionFileReader;
+use App\Infrastructure\Logging\LoggerFactory;
+use App\Infrastructure\Persistence\MysqlTransactionRepository;
+use App\Infrastructure\Persistence\PdoConnectionFactory;
+use App\Presentation\CLI\ImportCommand;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$command = $argv[1] ?? null;
+
+if ($command === 'about') {
+    echo 'Transaction Import CLI', PHP_EOL;
+    echo 'PHP version: ', PHP_VERSION, PHP_EOL;
+
+    exit(0);
+}
+
+if ($command === 'import') {
+    try {
+        $inputFile = $argv[2] ?? null;
+
+        if ($inputFile === null) {
+            echo 'Usage: php bin/console import <input.json>', PHP_EOL;
+
+            exit(1);
+        }
+
+        $databaseConfig = DatabaseConfig::fromEnvironment();
+        $connection = PdoConnectionFactory::create(
+                $databaseConfig->host,
+                $databaseConfig->port,
+                $databaseConfig->database,
+                $databaseConfig->username,
+                $databaseConfig->password,
+        );
+
+        $repository = new MysqlTransactionRepository($connection);
+        $saveImportedTransaction = new SaveImportedTransaction($repository);
+        $importTransaction = new ImportTransaction(new TransactionInputValidator());
+        $importTransactions = new ImportTransactions($importTransaction);
+        $logger = LoggerFactory::create(dirname(__DIR__) . '/var/app.log');
+
+        $importCommand = new ImportCommand(
+                new JsonTransactionFileReader(),
+                $importTransaction,
+                $importTransactions,
+                $saveImportedTransaction,
+                $logger,
+        );
+
+        exit($importCommand->execute($inputFile));
+    } catch (Throwable $exception) {
+        fwrite(STDERR, $exception->getMessage() . PHP_EOL);
+
+        exit(1);
+    }
+}
+
+echo 'Usage: php bin/console about', PHP_EOL;
+echo 'Usage: php bin/console import <input.json>', PHP_EOL;
+
+exit(1);

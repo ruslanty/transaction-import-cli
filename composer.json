@@ -1,0 +1,30 @@
+{
+    "name": "ruslanty/transaction-import-cli",
+    "description": "Transaction import CLI application",
+    "type": "project",
+    "require": {
+        "php": ">=8.5",
+        "psr/log": "^3.0",
+        "monolog/monolog": "^3.12",
+        "ext-pdo": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.3",
+        "phpstan/phpstan": "^2.2",
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "rector/rector": "^2.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "quality": "composer dump-autoload && composer audit --no-interaction && php-cs-fixer check --diff --verbose && phpstan analyse && rector process --dry-run && phpunit tests"
+    }
+}
