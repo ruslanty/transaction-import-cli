@@ -18,7 +18,7 @@ services:
     command: php -v
 
   mysql:
-    image: mysql:9.7
+    image: mysql:9.7.4
     environment:
       MYSQL_DATABASE: transaction_import
       MYSQL_USER: transaction_import

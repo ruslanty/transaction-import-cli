@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:9.7
+        image: mysql:9.7.4
         env:
           MYSQL_DATABASE: transaction_import
           MYSQL_USER: transaction_import
@@ -38,14 +38,14 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@2.40.0
         with:
-          php-version: '8.5'
+          php-version: '8.5.12'
           extensions: pdo_mysql, zip
-          tools: composer
+          tools: composer:2.10.3
 
       - name: Install MySQL client
         run: |
