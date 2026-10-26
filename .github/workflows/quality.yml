@@ -1,0 +1,67 @@
+name: Quality
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:9.7
+        env:
+          MYSQL_DATABASE: transaction_import
+          MYSQL_USER: transaction_import
+          MYSQL_PASSWORD: transaction_import
+          MYSQL_ROOT_PASSWORD: root
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+        ports:
+          - 3306:3306
+    env:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: transaction_import
+      DB_USERNAME: transaction_import
+      DB_PASSWORD: transaction_import
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: pdo_mysql, zip
+          tools: composer
+
+      - name: Install MySQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-mysql-client
+
+      - name: Configure MySQL service hostname
+        run: echo '127.0.0.1 mysql' | sudo tee -a /etc/hosts
+
+      - name: Wait for MySQL and initialize schema
+        run: |
+          until mysqladmin ping -h mysql -uroot -proot --silent; do sleep 1; done
+          mysql -h mysql -uroot -proot transaction_import < docker/mysql/init.sql
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Run quality checks
+        run: composer quality
