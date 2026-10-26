@@ -8,7 +8,7 @@ CLI application for importing transactions from a JSON file.
 
 ## Technology stack
 
-- PHP 8.5
+- PHP 8.5.12
 - FrankenPHP
 - MySQL 9.7
 - Docker Compose

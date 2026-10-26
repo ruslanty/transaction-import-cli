@@ -1,7 +1,7 @@
-image: dunglas/frankenphp:php8.5-bookworm
+image: dunglas/frankenphp:1.13.3-php8.5.12-trixie
 
 services:
-  - name: mysql:9.7
+  - name: mysql:9.7.4
     alias: mysql
 
 variables:
